@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/fotograf_paylas_id" android:title="Fotograf Paylaş"/>
+    <item android:id="@+id/cikis_id" android:title="Çikiş Yapın"/>
+
+
+
+</menu>

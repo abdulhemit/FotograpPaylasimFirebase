@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "648737860526",
+    "project_id": "ftografpaylasfirebase",
+    "storage_bucket": "ftografpaylasfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648737860526:android:2c3bec587ee502b17c763f",
+        "android_client_info": {
+          "package_name": "com.okuuyghur.fotografpaylasmafirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648737860526-tn3j5ol58hbu1b14qtk5p7c25vsf79cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9wC2jSyk1LhIcZiTp8LojxY-HiDq-V8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648737860526-tn3j5ol58hbu1b14qtk5p7c25vsf79cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
