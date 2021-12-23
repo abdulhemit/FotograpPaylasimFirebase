@@ -2,6 +2,7 @@ package com.okuuyghur.fotografpaylasmafirebase
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -11,6 +12,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -20,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -34,13 +37,14 @@ class FotografPaylasmaActivity : AppCompatActivity() {
     private lateinit var storage : FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var dataBase : FirebaseFirestore
+    private var guncelKullanici = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFotografPaylasmaBinding.inflate(layoutInflater)
         setContentView(binding.root)
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
-        dataBase = FirebaseFirestore.getInstance()
+          dataBase = Firebase.firestore
     }
 
     fun gorselYap(view: View){
@@ -66,25 +70,41 @@ class FotografPaylasmaActivity : AppCompatActivity() {
                 //  gorselin url ni almak
                 val yuklenengorselreference = reference.child("images").child(gorselIsmi)
                 yuklenengorselreference.downloadUrl.addOnSuccessListener{
-                    val downloadUrl = it
-                    val guncelKullanici = auth.currentUser!!.email.toString()
+                    val downloadUrl = it.toString()
+                    if (auth.currentUser != null){
+
+                         guncelKullanici = auth.currentUser!!.email.toString()
+
+                    }
                     val kullaniciYorumlari = binding.yorumId.text.toString()
                     val tarih = Timestamp.now()
 
                     // veri tabani islemleri
-                    val userHashmap = HashMap<String,Any>()
+                    val userHashmap = hashMapOf<String,Any>()
                     userHashmap.put("gorselUrl",downloadUrl)
                     userHashmap.put("guncelkullaniciEmail",guncelKullanici)
                     userHashmap.put("kullaniciYorumalari",kullaniciYorumlari)
                     userHashmap.put("tarih",tarih)
 
-                    dataBase.collection("Post").add(userHashmap).addOnCompleteListener { taskId ->
-                        if (taskId.isSuccessful){
-                            finish()
+                    dataBase.collection("users")
+                        .add(userHashmap)
+                        .addOnSuccessListener { documentReference ->
+
+                            if( documentReference == null ){
+                                Toast.makeText(this, "Does not exists", Toast.LENGTH_LONG).show()
+
+
+                            }
+                            else{
+                                Toast.makeText(this, "Already exists", Toast.LENGTH_LONG).show()
+                                finish()
+                            }
+
+                            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
                         }
-                    }.addOnFailureListener{
-                        Toast.makeText(this,it.localizedMessage,Toast.LENGTH_LONG).show()
-                    }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
                 }.addOnFailureListener{
                     Toast.makeText(this,it.localizedMessage,Toast.LENGTH_LONG).show()
 
